@@ -18,7 +18,7 @@ class Minion(pygame.sprite.Sprite):
         self.rect.topleft = position
 
 
-# Classe Minion - Personagem minion
+# Classe Box - Caixas de resposta
 class Box(pygame.sprite.Sprite):
     def __init__ (self, position):
         self.image = pygame.image.load( base_path + '/img/box.jpg' )
