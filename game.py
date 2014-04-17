@@ -36,6 +36,7 @@ equations = [
     {"label": "1 + 1", "result": 2},
     {"label": "2 x 5", "result": 10},
     {"label": "3 x 6", "result": 18},
+    {"label": "7 x 5", "result": 35},
     {"label": "4 x 5", "result": 20}
 ]
 
