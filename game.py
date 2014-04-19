@@ -3,11 +3,16 @@ import sys , os , math , random
 import pygame
 from pygame. locals import *
 from random import randint
+import equations
 
 pygame.init();
 
 # Settings
 base_path, filename = os.path.split(os.path.abspath(__file__))
+
+# Equations object
+eq = equations.Equations()
+eq.run()
 
 # Classe Minion - Personagem minion
 class Minion(pygame.sprite.Sprite):
