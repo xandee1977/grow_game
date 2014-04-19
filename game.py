@@ -21,8 +21,8 @@ class Minion(pygame.sprite.Sprite):
 # Classe Box - Caixas de resposta
 class Box(pygame.sprite.Sprite):
     def __init__ (self, position):
-        self.image = pygame.image.load( base_path + '/img/box.jpg' )
-        self.image.set_clip(pygame.Rect(0, 0, 48, 48))
+        self.image = pygame.image.load( base_path + '/img/green-box.png' )
+        self.image.set_clip(pygame.Rect(0, 0, 53, 53))
         self.rect = self.image.get_rect()
         self.rect.topleft = position
 
@@ -43,13 +43,6 @@ equations = [
 # texto do box
 box_font = pygame.font.SysFont("Comic Sans MS", 23)
 
-box_list = [
-    {"name": "box1", "position": 25, "value": randint(0, 99), "element": None},
-    {"name": "box2", "position": 98, "value": randint(0, 99), "element": None},
-    {"name": "box3", "position": 173, "value": randint(0, 99), "element": None},
-    {"name": "box4", "position": 246, "value": randint(0, 99), "element": None}
-]
-
 def start():
     print("Starting...")
 
@@ -62,6 +55,7 @@ def start():
     global title_font
     global title_label
     global box_list
+    global box_font
     global eq_key
     global res_key
     global colisao
@@ -75,6 +69,16 @@ def start():
     # Character dimensions
     c_width = 30
     c_height = 43
+
+
+    box_list = [
+        {"name": "box1", "position_x": 0, "position_y": (s_height - (53 + 25)), "value": randint(0, 99), "element": None},
+        {"name": "box2", "position_x": 53, "position_y": (s_height - (53 + 25)), "value": randint(0, 99), "element": None},
+        {"name": "box3", "position_x": 106, "position_y": (s_height - (53 + 25)), "value": randint(0, 99), "element": None},
+        {"name": "box3", "position_x": 159, "position_y": (s_height - (53 + 25)), "value": randint(0, 99), "element": None},
+        {"name": "box4", "position_x": 212, "position_y": (s_height - (53 + 25)), "value": randint(0, 99), "element": None},
+        {"name": "box4", "position_x": 265, "position_y": (s_height - (53 + 25)), "value": randint(0, 99), "element": None}
+    ]
 
     # Controle de movimento horizontal do personagem
     move = 0 #(0 => stop, 1 => left, 2 => right)
@@ -126,12 +130,12 @@ while running:
     screen.blit(player.image, player.rect)
 
     for box in box_list:
-        box["element"] = Box((box["position"], (s_height - (48 + 25) ))) # current box
+        box["element"] = Box((box["position_x"], box["position_y"])) # current box
         screen.blit(box["element"].image, box["element"].rect)
         
         # labels dos box
-        box_label = box_font.render(str(box["value"]), 48, (255,255,255))
-        screen.blit(box_label, ((box["position"] + 11), 435))
+        box_label = box_font.render(str(box["value"]), 53, (255,255,255))
+        screen.blit(box_label, ((box["position_x"] + 11), (box["position_y"] + 12)  ))
 
         if(player.rect.colliderect(box["element"].rect)):
             if(box["value"] == equations[eq_key]["result"]):
