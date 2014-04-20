@@ -26,15 +26,6 @@ class Equations():
         {"label": "4 x 5", "result": 20}
     ]
 
-    box_list = [
-        {"name": "box1"},
-        {"name": "box2"},
-        {"name": "box3"},
-        {"name": "box3"},
-        {"name": "box4"},
-        {"name": "box4"}
-    ]
-
     def __init__(self):
        print("Starting equation class...")
 
