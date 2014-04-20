@@ -12,7 +12,8 @@ base_path, filename = os.path.split(os.path.abspath(__file__))
 
 # Equations object
 eq = equations.Equations()
-eq.run()
+equations = eq.equations_list 
+#eq.run()
 
 # Classe Minion - Personagem minion
 class Minion(pygame.sprite.Sprite):
@@ -36,21 +37,13 @@ class Box(pygame.sprite.Sprite):
 #pygame.mixer.music.load( base_path + '/sound/music.m4a' )
 #pygame.mixer.music.play(0)
 
-# Equations
-equations = [
-    {"label": "1 + 1", "result": 2},
-    {"label": "2 x 5", "result": 10},
-    {"label": "3 x 6", "result": 18},
-    {"label": "7 x 5", "result": 35},
-    {"label": "4 x 5", "result": 20}
-]
-
 # texto do box
 box_font = pygame.font.SysFont("Comic Sans MS", 23)
 
 def start():
     print("Starting...")
 
+    global eq
     global move
     global filename
     global s_width
@@ -66,6 +59,7 @@ def start():
     global colisao
     global v_ini_pos
     global h_ini_pos
+    global buffer_equations
 
     # Screen dimensions
     s_width = 320
@@ -75,6 +69,18 @@ def start():
     c_width = 30
     c_height = 43
 
+    # Atualizando a lista
+    eq.equations_update()
+    buffer_equations = eq.equations
+    #print(str(current_equation["options"]))
+    
+    '''
+    [
+        {'options': [43,35,17,69,97,97], 'result': 35, 'label': '7x5'},
+        {'options': [34,38,18,77,89,12], 'result': 18, 'label': '3x6'},
+        {'options': [10,5,27,73,55,48], 'result': 10, 'label': '2x5'}
+    ]
+    '''
 
     box_list = [
         {"name": "box1", "position_x": 0, "position_y": (s_height - (53 + 25)), "value": randint(0, 99), "element": None},
@@ -96,12 +102,12 @@ def start():
     # Sroteio da equacao
     eq_key = randint(0, (len(equations)-1))
     
-    print(equations[eq_key]["label"])
-    print(equations[eq_key]["result"])  
+    #print(equations[eq_key]["label"])
+    #print(equations[eq_key]["result"])  
 
     # Atualiza o label do titulo
     title_font = pygame.font.SysFont("Comic Sans MS", 50)
-    title_label = title_font.render(equations[eq_key]["label"], 1, (0,0,0))
+    title_label = title_font.render(buffer_equations[0]["label"], 1, (0,0,0))
 
     # Box que tera a resposta
     res_key = randint(0, (len(box_list)-1))
@@ -134,26 +140,42 @@ while running:
     player = Minion((h_ini_pos, v_ini_pos))
     screen.blit(player.image, player.rect)
 
-    for box in box_list:
-        box["element"] = Box((box["position_x"], box["position_y"])) # current box
-        screen.blit(box["element"].image, box["element"].rect)
+    '''
+    [
+        {'options': [43,35,17,69,97,97], 'result': 35, 'label': '7x5'},
+        {'options': [34,38,18,77,89,12], 'result': 18, 'label': '3x6'},
+        {'options': [10,5,27,73,55,48], 'result': 10, 'label': '2x5'}
+    ]
+    '''
+
+    aux = 0
+    for current_equation in buffer_equations:
+        option_x = 0
+        box_height = 53
         
-        # labels dos box
-        box_label = box_font.render(str(box["value"]), 53, (255,255,255))
-        screen.blit(box_label, ((box["position_x"] + 11), (box["position_y"] + 12)  ))
+        for option in current_equation["options"]:
+            option_y = (s_height - ((len(buffer_equations) - aux) * box_height) - 25) # 2 vezes para ficar na linha acima
+            box = Box((option_x, option_y)) # current box
+            screen.blit(box.image, box.rect)
+            
+            # labels dos box
+            box_label = box_font.render(str(option), box_height, (255,255,255))
+            screen.blit(box_label, ((option_x + 11), (option_y + 12)  ))
 
-        if(player.rect.colliderect(box["element"].rect)):
-            if(box["value"] == equations[eq_key]["result"]):
-                if(colisao == False):
-                    print("Voce acertou!")
-            else:
-                if(colisao == False):
-                    print("Voce errou!")
+            if(player.rect.colliderect(box.rect)):
+                if(option == current_equation["result"]):
+                    if(colisao == False):
+                        print("Voce acertou!")
+                else:
+                    if(colisao == False):
+                        print("Voce errou!")
 
-            if(colisao == False):
-                print("Colidiu com: " + box["name"])                
-                colisao = True
-                start()
+                if(colisao == False):
+                    print("Colidiu com: " + str(option))                
+                    colisao = True
+                    start()
+            option_x = option_x + box.rect.width
+        aux = aux + 1       
 
     if(not colisao):
         v_ini_pos = v_ini_pos + 0.22

@@ -2,7 +2,9 @@ from random import randint
 
 class Equations():
     # Tamanho do buffer
-    options_buffer_size = 3
+    options_buffer_size = 2
+    # Numero de opcoes
+    options_number = 6
 
     # Lista de equacoes
     
@@ -25,12 +27,12 @@ class Equations():
     ]
 
     box_list = [
-        {"name": "box1", "position_x": 0, "value": randint(0, 99), "element": None},
-        {"name": "box2", "position_x": 53,"value": randint(0, 99), "element": None},
-        {"name": "box3", "position_x": 106, "value": randint(0, 99), "element": None},
-        {"name": "box3", "position_x": 159, "value": randint(0, 99), "element": None},
-        {"name": "box4", "position_x": 212, "value": randint(0, 99), "element": None},
-        {"name": "box4", "position_x": 265, "value": randint(0, 99), "element": None}
+        {"name": "box1"},
+        {"name": "box2"},
+        {"name": "box3"},
+        {"name": "box3"},
+        {"name": "box4"},
+        {"name": "box4"}
     ]
 
     def __init__(self):
@@ -54,23 +56,34 @@ class Equations():
         # Equacao sorteada
         eq_key = randint(0, (len(self.equations_list)-1))
         # Box que tera a resposta
-        res_key = randint(0, (len(self.box_list)-1))
+        res_key = randint(0, self.options_number)
 
         # Lista de opcoes
         cur_opt_list = []
 
         # Sorteando as opcoes dos box       
-        for box in self.box_list:
+        aux = 0
+        while aux < self.options_number:
             if len(cur_opt_list) == res_key:
                 cur_opt_list.append(self.equations_list[eq_key]["result"])
             else:
                 cur_opt_list.append(randint(0, 99))
+            aux = aux + 1
 
         self.equations.append({
             "label": self.equations_list[eq_key]["label"],
             "result": self.equations_list[eq_key]["result"],
             "options": cur_opt_list
         })        
+
+    # Atualiza a lista de equacoes
+    def equations_update(self):
+        print("Equations update...")
+        if(len(self.equations) > 0):
+            self.equations = self.equations[1:] # Remove o pprimeiro item da lista
+            self.equations_single_feed() # Adiciona um item na lista
+        else:
+            self.equations_feed()
 
     def run(self):
         self.equations_feed()
